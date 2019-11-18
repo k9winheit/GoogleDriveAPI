@@ -28,4 +28,8 @@ export class GoogleauthenticatorComponent implements OnInit {
    this._authService.signIn();
   }
 
+  createDoc(){
+    this._authService.createDoc();
+  }
+
 }

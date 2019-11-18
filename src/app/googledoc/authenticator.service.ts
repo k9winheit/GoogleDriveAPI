@@ -7,7 +7,7 @@ const API_KEY = "AIzaSyC7uDuqqSOKXCLr0p6VdN04gIf7p_Lz_Aw";
 // var SCOPES = 'https://www.googleapis.com/auth/drive';
 
 const DISCOVERY_DOCS = ["https://docs.googleapis.com/$discovery/rest?version=v1"];
-var SCOPES = 'https://www.googleapis.com/auth/documents.readonly';
+var SCOPES = 'https://www.googleapis.com/auth/documents';
 
 @Injectable({
   providedIn: 'root'
@@ -37,16 +37,16 @@ export class AuthenticatorService {
   signIn() {
     debugger;
     return this.googleAuth.signIn({
-        prompt: 'consent'
-    }).then((googleUser: gapi.auth2.GoogleUser) => {      
-        console.log( googleUser);
-        //this.appRepository.User.add(googleUser.getBasicProfile());
+      prompt: 'consent'
+    }).then((googleUser: gapi.auth2.GoogleUser) => {
+      console.log(googleUser.isSignedIn());
+      //this.appRepository.User.add(googleUser.getBasicProfile());
     });
-}
+  }
 
   initClient() {
     return new Promise((resolve, reject) => {
-      gapi.load('client:auth2', () => {
+      gapi.load('client', () => {
         return gapi.client.init({
           apiKey: API_KEY,
           clientId: CLIENT_ID,
@@ -59,6 +59,42 @@ export class AuthenticatorService {
         });
       });
     });
+  }
+
+  createDoc() {
+    gapi.auth.authorize({ client_id: CLIENT_ID, scope: SCOPES,immediate:true }, authResult => {
+      if (authResult && !authResult.error) {
+        console.log("This is true");
+        /* handle succesfull authorization */
+        gapi.client.load('drive', 'v3', () => {
+          var file = gapi.client.drive.files.get({
+            fileId: '1jOZppFc4Epx0oX_F2Rl83GF0Q2HRdHdfgLxgLledSw4',           
+            fields: 'webContentLink'
+          }).then((success => {
+            // var webContentLink = success.result;
+            var webContentLink = success.result.webContentLink;
+             console.log(webContentLink);
+          }))
+
+          console.log(file);
+        });
+      } else {
+        /* handle authorization error */
+      }
+    });
+
+
+
 
   }
+
+  //   getFiles(folderId: string) {
+  //     return gapi.client..files.list({
+  //         pageSize: 100,
+  //         fields: "nextPageToken, files(id, name, mimeType, modifiedTime, size)",
+  //         q: `'${folderId}' in parents and trashed = false`
+  //     }).then((res) => {
+
+  //     });
+  // }
 }

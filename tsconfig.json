@@ -15,7 +15,8 @@
     ],
     "types": [
       "gapi",
-      "gapi.auth2"
+      "gapi.auth2",
+      "gapi.client.drive"
     ],
     "lib": [
       "es2017",
