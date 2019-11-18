@@ -34,8 +34,7 @@ export class AuthenticatorService {
   //     );
   //   });
   // }
-  signIn() {
-    debugger;
+  signIn() {   
     return this.googleAuth.signIn({
       prompt: 'consent'
     }).then((googleUser: gapi.auth2.GoogleUser) => {
@@ -52,8 +51,7 @@ export class AuthenticatorService {
           clientId: CLIENT_ID,
           discoveryDocs: DISCOVERY_DOCS,
           scope: SCOPES,
-        }).then(() => {
-          debugger;
+        }).then(() => {         
           this.googleAuth = gapi.auth2.getAuthInstance();
           resolve();
         });
@@ -62,21 +60,38 @@ export class AuthenticatorService {
   }
 
   createDoc() {
-    gapi.auth.authorize({ client_id: CLIENT_ID, scope: SCOPES,immediate:true }, authResult => {
+    gapi.auth.authorize({ client_id: CLIENT_ID, scope: SCOPES, immediate: true }, authResult => {
       if (authResult && !authResult.error) {
         console.log("This is true");
         /* handle succesfull authorization */
         gapi.client.load('drive', 'v3', () => {
-          var file = gapi.client.drive.files.get({
-            fileId: '1jOZppFc4Epx0oX_F2Rl83GF0Q2HRdHdfgLxgLledSw4',           
-            fields: 'webContentLink'
-          }).then((success => {
-            // var webContentLink = success.result;
-            var webContentLink = success.result.webContentLink;
-             console.log(webContentLink);
-          }))
+          // var file = gapi.client.drive.files.get({
+          //   fileId: '1jOZppFc4Epx0oX_F2Rl83GF0Q2HRdHdfgLxgLledSw4',          
 
-          console.log(file);
+          // }).then((success => {
+          //   // var webContentLink = success.result;         
+          //    console.log(success);
+          // }))
+
+          var fileMetadata = {
+            'name': 'KanishkaAPP',
+            'mimeType': 'application/vnd.google-apps.document',
+          };
+
+          gapi.client.drive.files.create({
+            resource: fileMetadata
+          }).then((success) => {
+            console.log(success.result.id);
+            gapi.client.drive.files.get({
+              fileId: success.result.id,
+              fields: 'webViewLink'
+            }).then((success_test => {
+              // var webContentLink = success.result;         
+              console.log(success_test);
+              console.log("Link " + success_test.result.webViewLink);
+            }))
+          });
+
         });
       } else {
         /* handle authorization error */
