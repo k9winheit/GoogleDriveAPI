@@ -1,7 +1,8 @@
 <ng-container *ngIf="authIsLoaded">
   <button *ngIf="!isLoggedIn" (click)="signIn()">Sign In With Google</button>
   <button *ngIf="!isLoggedIn" (click)="createDoc()">Create Doc</button>
- <button *ngIf="isLoggedIn" (click)="signOut()">Sign Out</button>
+  <button *ngIf="isLoggedIn" (click)="signOut()">Sign Out</button>
+  <button (click)="isUserSignedIn()" *ngIf="authIsLoaded">Am I signed in</button>
+  <h4>{{ isLoggedIn }} </h4>
 </ng-container>
-<h2 *ngIf="authIsLoaded && isLoggedIn"> Signed in as </h2>
 <iframe height=600 width=600 *ngIf="isdocUrl" [src]="docUrl"></iframe>

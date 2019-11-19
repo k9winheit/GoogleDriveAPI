@@ -9,7 +9,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class GoogleauthenticatorComponent implements OnInit {
 
-  public authIsLoaded: boolean = true;
+  public authIsLoaded: boolean = false;
   public isLoggedIn: boolean = false;
   public isdocUrl: boolean = false;
   public docUrl : any;
@@ -23,12 +23,19 @@ export class GoogleauthenticatorComponent implements OnInit {
 
   initClient() {
     this._authService.initClient().then((auth: any) => {
-
+      this.authIsLoaded = true;
+      this.isUserSignedIn()
     });
   }
 
-  signIn() {
-    this._authService.signIn();
+  async signIn() {
+    await this._authService.signIn();
+    this.isUserSignedIn();
+  }
+
+  async signOut() {
+    await this._authService.signOut();
+    this.isUserSignedIn();
   }
 
   createDoc() {
@@ -38,6 +45,11 @@ export class GoogleauthenticatorComponent implements OnInit {
       console.log(response);
       this.isdocUrl = true;
       //console.log(response.result.webViewLink);
+  }
+
+  isUserSignedIn(): void {
+
+    this.isLoggedIn = this._authService.isSignedIn();
     })
 
   }
