@@ -7,7 +7,7 @@ const API_KEY = "AIzaSyC7uDuqqSOKXCLr0p6VdN04gIf7p_Lz_Aw";
 // var SCOPES = 'https://www.googleapis.com/auth/drive';
 
 const DISCOVERY_DOCS = ["https://docs.googleapis.com/$discovery/rest?version=v1"];
-var SCOPES = 'https://www.googleapis.com/auth/documents';
+var SCOPES = 'https://www.googleapis.com/auth/documents '+ 'https://www.googleapis.com/auth/drive ';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +38,8 @@ export class AuthenticatorService {
     return this.googleAuth.signIn({
       prompt: 'consent'
     }).then((googleUser: gapi.auth2.GoogleUser) => {
-      console.log(googleUser.isSignedIn());
+      console.log(googleUser);
+      this.authDoc();
       //this.appRepository.User.add(googleUser.getBasicProfile());
     });
   }
@@ -52,64 +53,54 @@ export class AuthenticatorService {
           discoveryDocs: DISCOVERY_DOCS,
           scope: SCOPES,
         }).then(() => {         
-          this.googleAuth = gapi.auth2.getAuthInstance();
+          this.googleAuth = gapi.auth2.getAuthInstance();          
           resolve();
         });
       });
     });
   }
 
-  createDoc() {
+  authDoc() {
     gapi.auth.authorize({ client_id: CLIENT_ID, scope: SCOPES, immediate: true }, authResult => {
       if (authResult && !authResult.error) {
         console.log("This is true");
         /* handle succesfull authorization */
-        gapi.client.load('drive', 'v3', () => {
-          // var file = gapi.client.drive.files.get({
-          //   fileId: '1jOZppFc4Epx0oX_F2Rl83GF0Q2HRdHdfgLxgLledSw4',          
-
-          // }).then((success => {
-          //   // var webContentLink = success.result;         
-          //    console.log(success);
-          // }))
-
-          var fileMetadata = {
-            'name': 'KanishkaAPP',
-            'mimeType': 'application/vnd.google-apps.document',
-          };
-
-          gapi.client.drive.files.create({
-            resource: fileMetadata
-          }).then((success) => {
-            console.log(success.result.id);
-            gapi.client.drive.files.get({
-              fileId: success.result.id,
-              fields: 'webViewLink'
-            }).then((success_test => {
-              // var webContentLink = success.result;         
-              console.log(success_test);
-              console.log("Link " + success_test.result.webViewLink);
-            }))
-          });
-
-        });
+       
       } else {
         /* handle authorization error */
       }
     });
 
-
-
-
   }
 
-  //   getFiles(folderId: string) {
-  //     return gapi.client..files.list({
-  //         pageSize: 100,
-  //         fields: "nextPageToken, files(id, name, mimeType, modifiedTime, size)",
-  //         q: `'${folderId}' in parents and trashed = false`
-  //     }).then((res) => {
+createDoc(){
 
-  //     });
-  // }
+  return new Promise((resolve, reject) => {
+    gapi.client.load('drive', 'v3', () => {
+
+      var fileMetadata = {
+        'name': 'sssssssssoooiiisssshkaAPP',
+        'mimeType': 'application/vnd.google-apps.document',
+      };
+  
+      gapi.client.drive.files.create({
+        resource: fileMetadata
+      }).then((success) => {
+        console.log(success.result.id);
+       return gapi.client.drive.files.get({
+          fileId: success.result.id,
+          fields: 'webViewLink'
+        }).then((success_test => {
+          //var webContentLink = success.result.webViewLink;         
+          resolve(success_test);
+        }))
+      });
+  
+    });
+  })
+
+  
+}
+
+
 }

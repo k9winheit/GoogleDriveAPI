@@ -4,3 +4,4 @@
  <button *ngIf="isLoggedIn" (click)="signOut()">Sign Out</button>
 </ng-container>
 <h2 *ngIf="authIsLoaded && isLoggedIn"> Signed in as </h2>
+<iframe height=600 width=600 *ngIf="isdocUrl" [src]="docUrl"></iframe>
