@@ -43,8 +43,12 @@ export class AuthenticatorService {
     return this.googleAuth.signIn({
       prompt: 'consent'
     }).then((googleUser: gapi.auth2.GoogleUser) => {
-      console.log(googleUser.isSignedIn());
+      return googleUser.isSignedIn();
     });
+  }
+
+  signOut() {
+    this.googleAuth.signOut();
   }
 
   initClient() {

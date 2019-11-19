@@ -8,7 +8,7 @@ import { AuthenticatorService } from '../authenticator.service';
 })
 export class GoogleauthenticatorComponent implements OnInit {
 
-  public authIsLoaded: boolean = true;
+  public authIsLoaded: boolean = false;
   public isLoggedIn: boolean = false;
 
 
@@ -20,12 +20,19 @@ export class GoogleauthenticatorComponent implements OnInit {
 
   initClient() {
     this._authService.initClient().then((auth: any) => {
-
+      this.authIsLoaded = true;
+      this.isUserSignedIn()
     });
   }
 
-  signIn() {
-    this._authService.signIn();
+  async signIn() {
+    await this._authService.signIn();
+    this.isUserSignedIn();
+  }
+
+  async signOut() {
+    await this._authService.signOut();
+    this.isUserSignedIn();
   }
 
   createDoc() {

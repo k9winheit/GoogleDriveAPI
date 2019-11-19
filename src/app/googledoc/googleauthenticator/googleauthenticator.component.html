@@ -2,6 +2,6 @@
   <button *ngIf="!isLoggedIn" (click)="signIn()">Sign In With Google</button>
   <button *ngIf="!isLoggedIn" (click)="createDoc()">Create Doc</button>
   <button *ngIf="isLoggedIn" (click)="signOut()">Sign Out</button>
-  <button (click)="isUserSignedIn()">Am I signed in</button>
+  <button (click)="isUserSignedIn()" *ngIf="authIsLoaded">Am I signed in</button>
   <h4>{{ isLoggedIn }} </h4>
 </ng-container>
