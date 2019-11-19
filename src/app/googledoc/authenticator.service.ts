@@ -15,7 +15,7 @@ var SCOPES = 'https://www.googleapis.com/auth/documents';
 export class AuthenticatorService {
   public auth2: any;
   googleAuth: gapi.auth2.GoogleAuth;
-
+  googleUser: gapi.auth2.GoogleUser;
 
   constructor(private zone: NgZone) { }
 
@@ -34,12 +34,16 @@ export class AuthenticatorService {
   //     );
   //   });
   // }
-  signIn() {   
+  isSignedIn() {
+    return this.googleAuth.isSignedIn.get();
+  }
+
+
+  signIn() {
     return this.googleAuth.signIn({
       prompt: 'consent'
     }).then((googleUser: gapi.auth2.GoogleUser) => {
       console.log(googleUser.isSignedIn());
-      //this.appRepository.User.add(googleUser.getBasicProfile());
     });
   }
 
@@ -51,7 +55,7 @@ export class AuthenticatorService {
           clientId: CLIENT_ID,
           discoveryDocs: DISCOVERY_DOCS,
           scope: SCOPES,
-        }).then(() => {         
+        }).then(() => {
           this.googleAuth = gapi.auth2.getAuthInstance();
           resolve();
         });

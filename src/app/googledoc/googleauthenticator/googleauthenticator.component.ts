@@ -18,18 +18,23 @@ export class GoogleauthenticatorComponent implements OnInit {
     this.initClient();
   }
 
-  initClient(){
+  initClient() {
     this._authService.initClient().then((auth: any) => {
-     
+
     });
   }
 
   signIn() {
-   this._authService.signIn();
+    this._authService.signIn();
   }
 
-  createDoc(){
+  createDoc() {
     this._authService.createDoc();
+  }
+
+  isUserSignedIn(): void {
+
+    this.isLoggedIn = this._authService.isSignedIn();
   }
 
 }
